@@ -9,6 +9,7 @@ export const register = async (name: string, username: string, password: string)
     const salt = 10;
     const hashedPassword = await bcrypt.hash(password, salt);
     const user = new User({
+        name,
         username,
         password: hashedPassword
     });
