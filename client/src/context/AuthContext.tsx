@@ -1,7 +1,8 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from '@/lib/axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { isProtectedRoute } from '@/lib/isProtectedRoute';
 
 type User = {
   user: {
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   const fetchMe = async () => {
     try {
@@ -50,8 +52,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchMe();
-  }, []);
+    if (isProtectedRoute(pathname)) {
+      fetchMe();
+    } else {
+      setLoading(false);
+    }
+  }, [pathname]);
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
