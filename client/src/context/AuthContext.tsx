@@ -1,11 +1,14 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 type User = {
-  id: string;
-  username: string;
-  name: string;
+  user: {
+    id: string;
+    username: string;
+    name: string;
+  }
 };
 
 type AuthContextType = {
@@ -20,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchMe = async () => {
     try {
@@ -42,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     localStorage.removeItem('token');
     setUser(null);
+    router.push('/login');
   };
 
   useEffect(() => {
