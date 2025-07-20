@@ -10,7 +10,7 @@ const authRouter = Router();
 authRouter.post('/register', validate({ body: registerSchema }), registerUser);
 authRouter.post('/login', validate({ body: loginSchema }), loginUser);
 
-authRouter.get('/me', protect, async (req: Request, res: Response) => {
+authRouter.get('/dashboard', protect, async (req: Request, res: Response) => {
   try {
     const user = await User.findById((req as any).userId).select('-password');
     if (!user) {
